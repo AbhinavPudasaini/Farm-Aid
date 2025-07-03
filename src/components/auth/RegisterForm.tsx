@@ -530,14 +530,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ userType, onSuccess 
                     />
                   </div>
                 </div>
-                <input
-  type="email"
-  name="email"
-  value={formData.email}
-  onChange={handleChange}
-  placeholder="Enter your email"
-/>
-
+               
 
                 <div>
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
@@ -580,6 +573,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ userType, onSuccess 
                       <label key={crop} className="flex items-center">
                         <input
                           type="checkbox"
+                          name="crops_to_grow"
                           checked={formData.crops_to_grow.includes(crop)}
                           onChange={() => handleCropToggle(crop)}
                           className="rounded border-gray-300 text-green-600 focus:ring-green-500"
@@ -640,6 +634,26 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ userType, onSuccess 
             )}
 
             {/* Location - Required for both */}
+            <div>
+              <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 mb-2">
+                Email Addres
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter email address"
+                />
+              </div>
+            </div>
             <div>
               <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
                 Location *

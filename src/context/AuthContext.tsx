@@ -308,11 +308,11 @@ interface RegisterData {
   type: 'farmer' | 'consumer';
   // Farmer specific
   name?: string;
-  bio?: string;
+  description?: string;
   location: string;
   experience?: number;
-  crops_we_grow?: string[];
-  profile_image?: string;
+  crops_to_grow?: string[];
+  image?: string;
   // Consumer specific
   consumer_type?: 'personal' | 'business';
 }
@@ -334,6 +334,8 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  
 
   useEffect(() => {
     // Check for existing session
@@ -438,11 +440,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           phone_number: userData.phone_number,
           password: userData.password,
           name: userData.name!,
-          bio: userData.bio,
+          bio: userData.description,
           farm_location: userData.location,
           experience: userData.experience!,
-          crops_we_grow: userData.crops_we_grow,
-          profile_image: userData.profile_image
+          crops_we_grow: userData.crops_to_grow,
+          profile_image: userData.image
         });
       } else {
         result = await authHelpers.signUpConsumer({

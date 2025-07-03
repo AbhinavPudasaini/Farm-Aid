@@ -36,11 +36,11 @@ export const authHelpers = {
     phone_number: string
     password: string
     name: string
-    description?: string
-    location: string
+    bio?: string
+    farm_location: string
     experience: number
-    crops_to_grow?: string[]
-    image?: string
+    crops_we_grow?: string[]
+    profile_image?: string
   }) {
     try {
       // TODO: You might need to adjust this based on your auth setup
@@ -65,11 +65,11 @@ export const authHelpers = {
           id: authData.user?.id,
           name: data.name,
           phone_number: data.phone_number,
-          bio: data.description,
-          farm_location: data.location,
+          bio: data.bio,
+          farm_location: data.farm_location,
           experience: data.experience,
-          crops_we_grow: data.crops_to_grow,
-          profile_image: data.image,
+          crops_we_grow: data.crops_we_grow,
+          profile_image: data.profile_image,
         }])
         .select()
         .single()
@@ -93,29 +93,46 @@ export const authHelpers = {
   }) {
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: data.email, // Temporary email if using email auth
-        password: data.password,
-        options: {
-          data: {
-            phone_number: data.phone_number,
-            user_type: 'consumer'
-          }
-        }
+  email: data.email,
+  password: data.password,
+  options: {
+    data: {
+      phone_number: data.phone_number,
+      user_type: 'consumer'
+    }
+  }
       })
+if (authError) throw authError;
 
-      if (authError) throw authError
+const userId = authData.user?.id;
+
+if (!userId) {
+  throw new Error('User ID not found after signup');
+}
+
+//       await supabase.from('user_profiles').insert([{
+//   id: authData.user?.id,
+//   phone_number: data.phone_number,
+//   email: data.email,
+//   user_type: 'consumer',
+//   location: data.location,
+// }]);
+
+
 
       // Insert consumer profile
       const { data: profileData, error: profileError } = await supabase
-        .from('consumers') // TODO: Replace 'consumers' with your actual table name
-        .insert([{
-          id: authData.user?.id,
-          phone_number: data.phone_number,
-          location: data.location,
-          consumer_type: data.type
-        }])
-        .select()
-        .single()
+  .from('consumers')
+  .insert([{
+    id: authData.user?.id,   // <--- IMPORTANT: assign this
+    phone_number: data.phone_number,
+    location: data.location,
+    consumer_type: data.consumer_type,
+  }])
+  .select()
+  .single();
+
+
 
       if (profileError) throw profileError
 
@@ -126,12 +143,14 @@ export const authHelpers = {
     }
   },
 
+
+
   // Sign in with phone and password
-  async signIn(phone_number: string, password: string) {
+  async signIn(email: string, password: string) {
     try {
       // TODO: Adjust based on your auth method
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: `${phone_number}@temp.com`, // If using email auth
+        email: email, // If using email auth
         password: password
       })
 

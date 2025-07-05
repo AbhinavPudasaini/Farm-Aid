@@ -338,95 +338,152 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   
 
   useEffect(() => {
-    // Check for existing session
-    const getSession = async () => {
-      try {
-        const session = await authHelpers.getCurrentSession();
-        if (session?.user) {
+  const getSession = async () => {
+    try {
+      const session = await authHelpers.getCurrentSession();
+
+      if (session?.user) {
+        try {
           await loadUserProfile(session.user);
+        } catch (e) {
+          console.error("Profile loading error", e);
+          setUser(null); // fallback
         }
-      } catch (error) {
-        console.error('Session check error:', error);
-      } finally {
-        setIsLoading(false);
+      } else {
+        setUser(null);
       }
-    };
+    } catch (error) {
+      console.error("Session check error:", error);
+      setUser(null);
+    } finally {
+      setIsLoading(false); // 🔥 Make sure this ALWAYS runs
+    }
+  };
 
-    getSession();
+  getSession();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
         await loadUserProfile(session.user);
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
       }
-    });
+    }
+  );
 
-    return () => subscription.unsubscribe();
-  }, []);
+  return () => subscription.unsubscribe();
+}, []);
+
+
 
   const loadUserProfile = async (authUser: User) => {
-    try {
-      const userType = authUser.user_metadata?.user_type;
-      let profile = null;
+  try {
+    const userType = authUser.user_metadata?.user_type;
 
-      if (userType === 'farmer') {
-        const { data } = await supabase
-          .from('farmers') // TODO: Replace with your actual table name
-          .select('*')
-          .eq('id', authUser.id)
-          .single();
-        profile = data;
-      } else if (userType === 'consumer') {
-        const { data } = await supabase
-          .from('consumers') // TODO: Replace with your actual table name
-          .select('*')
-          .eq('id', authUser.id)
-          .single();
-        profile = data;
-      }
-
-      if (profile) {
-        setUser({
-          id: authUser.id,
-          phone_number: profile.phone_number,
-          name: profile.name || undefined,
-          type: userType,
-          location: profile.location,
-          profile
-        });
-      }
-    } catch (error) {
-      console.error('Error loading user profile:', error);
+    if (!userType) {
+      console.error("No user_type found in metadata");
+      setUser(null);
+      return;
     }
-  };
+
+    let profile = null;
+
+    if (userType === 'farmer') {
+      const { data, error } = await supabase
+        .from('farmers')
+        .select('*')
+        .eq('id', authUser.id)
+        .single();
+
+      if (error || !data) {
+        throw error || new Error("Farmer profile not found");
+      }
+
+      profile = data;
+    } else if (userType === 'consumer') {
+      const { data, error } = await supabase
+        .from('consumers')
+        .select('*')
+        .eq('id', authUser.id)
+        .single();
+
+      if (error || !data) {
+        throw error || new Error("Consumer profile not found");
+      }
+
+      profile = data;
+    }
+
+    setUser({
+      id: authUser.id,
+      phone_number: profile.phone_number,
+      name: profile.name || undefined,
+      type: userType,
+      location: profile.location,
+      profile
+    });
+  } catch (error) {
+  console.error('Error loading user profile:', error);
+  setUser(null); // <- CRUCIAL to exit loading properly
+}
+};
+
+
+  // const login = async (email: string, password: string): Promise<boolean> => {
+  //   setIsLoading(true);
+    
+  //   try {
+  //     const result = await authHelpers.signIn(email, password);
+      
+  //     if (result.user && result.profile) {
+  //       setUser({
+  //         id: result.user.id,
+  //         phone_number: result.profile.phone_number,
+  //         name: (result.profile as FarmerProfile).name || undefined,
+  //         type: result.userType as 'farmer' | 'consumer',
+  //         location: result.profile.location,
+  //         profile: result.profile
+  //       });
+  //       return true;
+  //     }
+  //     return false;
+  //   } catch (error) {
+  //     console.error('Login error:', error);
+  //     return false;
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    
-    try {
-      const result = await authHelpers.signIn(email, password);
-      
-      if (result.user && result.profile) {
-        setUser({
-          id: result.user.id,
-          phone_number: result.profile.phone_number,
-          name: (result.profile as FarmerProfile).name || undefined,
-          type: result.userType as 'farmer' | 'consumer',
-          location: result.profile.location,
-          profile: result.profile
-        });
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
+  setIsLoading(true);
+
+  try {
+    const result = await authHelpers.signIn(email, password);
+
+    if (result.user && result.profile) {
+      setUser({
+        id: result.user.id,
+        phone_number: result.profile.phone_number,
+        name: (result.profile as FarmerProfile).name || undefined,
+        type: result.userType as 'farmer' | 'consumer',
+        location: result.profile.location,
+        profile: result.profile
+      });
+
+      return true;
     }
-  };
+
+    return false;
+  } catch (error) {
+    console.error('Login error:', error);
+    return false;
+  } finally {
+    setIsLoading(false); // this ensures spinner ends
+  }
+};
+
 
   const register = async (userData: RegisterData): Promise<boolean> => {
     setIsLoading(true);
@@ -477,13 +534,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = async () => {
-    try {
-      await authHelpers.signOut();
-      setUser(null);
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.error('Supabase sign out error:', error);
+
+    setUser(null);
+
+    // Clear all cached storage from Supabase
+    localStorage.removeItem('supabase.auth.token');
+    localStorage.removeItem('supabase.auth.refresh_token');
+    localStorage.removeItem('supabase.auth.user'); // legacy
+    sessionStorage.clear(); // if used
+
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
+};
+
+
 
   const isAuthenticated = user !== null;
 

@@ -268,8 +268,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ userType, onSuccess }) => 
             {/* Demo credentials info */}
             <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg text-sm">
               <p className="font-medium">Demo Credentials:</p>
-              <p>Phone: 9876543210</p>
-              <p>Password: password123</p>
+              <p>For Farmer Login :</p>
+              <p>email: abhinavpudasainee@gmail.com</p>
+              <p>Password: abhinav</p>
+              <p>-----------------------------</p>
+              <p>For Consumer Login :</p>
+              <p>email: abhinavpudasainee9@gmail.com</p>
+              <p>Password: abhinav</p>
             </div>
 
             <div>
@@ -361,7 +366,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ userType, onSuccess }) => 
                 'Sign in'
               )}
             </button>
-
             <div className="text-center">
               <p className="text-sm text-gray-600">
                 Don't have an account?{' '}

@@ -25,4 +25,3 @@ export async function askLlama(message) {
   return data?.choices?.[0]?.message?.content || "Sorry, something went wrong.";
 }
 
-

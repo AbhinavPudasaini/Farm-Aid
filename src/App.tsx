@@ -15,6 +15,8 @@ import { ConsumerDashboard } from './pages/consumer/ConsumerDashboard';
 import { MarketplaceFeed } from './pages/consumer/MarketplaceFeed';
 import { FarmerProfiles } from './pages/consumer/FarmerProfiles';
 import { DemandBoard } from './pages/consumer/DemandBoard';
+import { FarmerDashboard as ConsumerFarmerDashboard } from './pages/consumer/FarmerDashboard';
+import { ConsumerProfile } from './pages/consumer/ConsumerProfile';
 
 function App() {
   return (
@@ -95,10 +97,26 @@ function App() {
                 } 
               />
               <Route 
+                path="/consumer/farmers/:farmerId" 
+                element={
+                  <ProtectedRoute userType="consumer">
+                    <ConsumerFarmerDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
                 path="/consumer/demand-board" 
                 element={
                   <ProtectedRoute userType="consumer">
                     <DemandBoard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/consumer/profile" 
+                element={
+                  <ProtectedRoute userType="consumer">
+                    <ConsumerProfile />
                   </ProtectedRoute>
                 } 
               />

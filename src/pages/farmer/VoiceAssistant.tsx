@@ -265,7 +265,7 @@ const speak = async (text: string) => {
   setMessages((prev) => [...prev, userMessage]);
 
   setIsAiTyping(true);
-
+  
   try {
     const res = await fetch("http://localhost:5000/api/ask-ai", {
       method: "POST",

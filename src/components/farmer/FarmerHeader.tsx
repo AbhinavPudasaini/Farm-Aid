@@ -16,10 +16,18 @@ export const FarmerHeader: React.FC = () => {
     { path: '/farmer/profile', label: 'Profile' }
   ];
 
-  const handleLogout = () => {
-    logout();
-    navigate('/', { replace: true });
-  };
+//   const handleLogout = async () => {
+//   await logout(); // Wait for logout to fully complete
+//   localStorage.clear(); // Optional but useful to fully clear old data
+//   navigate('/', { replace: true });
+// };
+const handleLogout = async () => {
+  await logout();
+  // Optional: force a clean reload
+  window.location.href = '/';
+};
+
+
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-250">
@@ -62,7 +70,6 @@ export const FarmerHeader: React.FC = () => {
     className="h-14 w-auto"
   />
 </a>
-
             <button 
               onClick={handleLogout}
               className="p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"

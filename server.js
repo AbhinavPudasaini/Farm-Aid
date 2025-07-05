@@ -18,7 +18,7 @@ app.post("/api/ask-ai", async (req, res) => {
   const messages = [
     {
       role: "system",
-      content: `You are FarmAid, an AI assistant designed to help farmers in Nepal. Provide simple, practical, and localized farming advice based on regional weather, crop trends, and market prices. Answer in a friendly and encouraging tone.
+      content: `You are FarmAid, an AI assistant designed to help farmers all over the world. Provide simple, practical, and localized farming advice based on regional weather, crop trends, and market prices. Answer in a friendly and encouraging tone.
 
 You can assist with:
 - Crop selection based on season and location

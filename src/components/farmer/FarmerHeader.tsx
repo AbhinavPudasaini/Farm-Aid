@@ -22,10 +22,11 @@ export const FarmerHeader: React.FC = () => {
 //   navigate('/', { replace: true });
 // };
 const handleLogout = async () => {
-  await logout();
-  // Optional: force a clean reload
-  window.location.href = '/';
+  console.log("👉 Logging out...");
+  await logout(); // your custom logout function
+  navigate('/', { replace: true }); // React way to redirect
 };
+
 
 
 

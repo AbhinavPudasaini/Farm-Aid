@@ -106,7 +106,7 @@ export default function VoiceAssistant() {
   setIsAiTyping(true);
 
   try {
-    const res = await fetch("http://localhost:5000/api/ask-ai", {
+    const res = await fetch("https://farm-aid-clone.onrender.com/api/ask-ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -190,7 +190,7 @@ const handlePromptSend = async (prompt: string) => {
 
   try {
     // ✅ Use full backend URL for local development
-    const res = await fetch("http://localhost:5000/api/ask-ai", {
+    const res = await fetch("https://farm-aid-clone.onrender.com/api/ask-ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt }),
@@ -230,7 +230,7 @@ const speak = async (text: string) => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/tts", {
+    const res = await fetch("https://farm-aid-clone.onrender.com/api/tts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text }),
@@ -267,7 +267,7 @@ const speak = async (text: string) => {
   setIsAiTyping(true);
   
   try {
-    const res = await fetch("http://localhost:5000/api/ask-ai", {
+    const res = await fetch("https://farm-aid-clone.onrender.com/api/ask-ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

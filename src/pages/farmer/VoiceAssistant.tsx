@@ -230,7 +230,7 @@ const speak = async (text: string) => {
   }
 
   try {
-    const res = await fetch("https://farm-aid-clone.onrender.com/api/tts", {
+    const res = await fetch("https://farm-aid-clone.onrender.com/tts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text }),

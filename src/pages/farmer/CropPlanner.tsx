@@ -1134,7 +1134,7 @@ Using this, suggest a detailed crop plan with advice on:
 
   setIsAiTyping(true);
 
-  const res = await fetch("http://localhost:5000/api/ask-ai", {
+  const res = await fetch("https://farm-aid-clone.onrender.com/api/ask-ai", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -1175,7 +1175,7 @@ Using this, suggest a detailed crop plan with advice on:
   setIsAiTyping(true);
 
   try {
-    const res = await fetch("http://localhost:5000/api/ask-ai", {
+    const res = await fetch("https://farm-aid-clone.onrender.com/api/ask-ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

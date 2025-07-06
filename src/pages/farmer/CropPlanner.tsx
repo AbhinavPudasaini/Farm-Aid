@@ -1180,7 +1180,7 @@ Using this, suggest a detailed crop plan with advice on:
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt: chatInput,
-        context: "" // ⛔️ if you always send empty context, assistant might not respond well
+        context: context // ⛔️ if you always send empty context, assistant might not respond well
       }),
     });
 

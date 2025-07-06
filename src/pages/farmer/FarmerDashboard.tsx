@@ -43,7 +43,7 @@ export const FarmerDashboard: React.FC = () => {
     humidity: 65,
     windSpeed: 12,
     precipitation: 20,
-    location: 'Pune, Maharashtra'
+    location: ''
   };
 
   const notifications: Notification[] = [
